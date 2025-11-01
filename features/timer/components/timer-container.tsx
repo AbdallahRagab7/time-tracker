@@ -20,6 +20,8 @@ import { Button } from "@/components/ui/button";
 import { TimerDisplay } from "./timer-display";
 import { Play, Square, RotateCcw } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox"; // assuming you have one
+import { TodaySummary } from "./today-summary";
+import { RecentEntries } from "./recent-entries";
 
 export function TimerContainer() {
   // --- Fake Data ---
@@ -135,6 +137,13 @@ export function TimerContainer() {
             </div>
           </CardContent>
         </Card>
+      </div>
+      <div className="space-y-4">
+        <TodaySummary />
+      </div>
+
+      <div className="lg:col-span-3">
+        <RecentEntries />
       </div>
     </div>
   );

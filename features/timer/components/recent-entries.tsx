@@ -1,0 +1,126 @@
+"use client";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Trash2 } from "lucide-react";
+
+export function RecentEntries() {
+  // Static data for recent entries
+  const recentEntries = [
+    {
+      id: "1",
+      task: "Design Dashboard",
+      projectId: "proj1",
+      startTime: new Date().setHours(9, 0, 0, 0),
+      endTime: new Date().setHours(10, 30, 0, 0),
+      duration: 5400, // 1.5 hours in seconds
+      billable: true,
+    },
+    {
+      id: "2",
+      task: "Team Meeting",
+      projectId: "proj2",
+      startTime: new Date().setHours(11, 0, 0, 0),
+      endTime: new Date().setHours(12, 0, 0, 0),
+      duration: 3600, // 1 hour in seconds
+      billable: false,
+    },
+    {
+      id: "3",
+      task: "Code Review",
+      projectId: "proj1",
+      startTime: new Date().setHours(13, 30, 0, 0),
+      endTime: new Date().setHours(15, 0, 0, 0),
+      duration: 5400, // 1.5 hours in seconds
+      billable: true,
+    },
+  ];
+
+  // Static projects data
+  const projects = [
+    { id: "proj1", name: "Website Redesign", color: "#3b82f6" },
+    { id: "proj2", name: "Internal", color: "#10b981" },
+  ];
+
+  const formatTime = (seconds: number) => {
+    return `${String(Math.floor(seconds / 3600)).padStart(2, "0")}:${String(
+      Math.floor((seconds % 3600) / 60)
+    ).padStart(2, "0")}`;
+  };
+
+  return (
+    <div className="mt-8">
+      <Card className="border-border bg-card">
+        <CardHeader>
+          <CardTitle>Recent Entries</CardTitle>
+          <CardDescription>Last 7 entries from today</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {recentEntries.length === 0 ? (
+            <p className="text-center text-muted-foreground py-8">
+              No entries yet today
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {recentEntries.map((entry) => {
+                const project = projects.find((p) => p.id === entry.projectId);
+                const startHour = new Date(entry.startTime).toLocaleTimeString(
+                  "en-US",
+                  {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }
+                );
+                const endHour = new Date(entry.endTime).toLocaleTimeString(
+                  "en-US",
+                  {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }
+                );
+
+                return (
+                  <div
+                    key={entry.id}
+                    className="flex items-center justify-between p-3 rounded-lg bg-background border border-border hover:border-primary/50 transition-colors"
+                  >
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <div
+                          className="w-2 h-2 rounded-full"
+                          style={{ backgroundColor: project?.color }}
+                        />
+                        <span className="font-medium text-foreground">
+                          {entry.task}
+                        </span>
+                        {entry.billable && (
+                          <span className="text-xs bg-primary/20 text-primary px-2 py-1 rounded">
+                            Billable
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        {startHour} – {endHour} • {formatTime(entry.duration)}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {}}
+                      className="ml-2 text-muted-foreground hover:text-destructive transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4 cursor-not-allowed opacity-50" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
