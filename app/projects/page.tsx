@@ -1,9 +1,7 @@
-"use client"
-
-import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
-import { ProjectCard } from "@/features/projects/components/ProjectCard"
-import { Project } from "@/types/project"
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { ProjectCard } from "@/features/projects/components/ProjectCard";
+import { Project } from "@/types/project";
 
 // Fake data for projects
 const fakeProjects: Project[] = [
@@ -57,7 +55,7 @@ const fakeProjects: Project[] = [
     status: "archived",
     createdAt: new Date().toISOString(),
   },
-]
+];
 
 // Fake time entries data (in seconds)
 const fakeTimeEntries = [
@@ -68,24 +66,24 @@ const fakeTimeEntries = [
   { projectId: "3", duration: 12600, billable: true }, // 3.5 hours
   { projectId: "4", duration: 9000, billable: true }, // 2.5 hours
   { projectId: "4", duration: 5400, billable: true }, // 1.5 hours
-]
+];
 
 function getProjectStats(projectId: string) {
-  const entries = fakeTimeEntries.filter((e) => e.projectId === projectId)
-  const totalTime = entries.reduce((sum, e) => sum + e.duration, 0)
+  const entries = fakeTimeEntries.filter((e) => e.projectId === projectId);
+  const totalTime = entries.reduce((sum, e) => sum + e.duration, 0);
   const billableTime = entries
     .filter((e) => e.billable)
-    .reduce((sum, e) => sum + e.duration, 0)
+    .reduce((sum, e) => sum + e.duration, 0);
 
   return {
     totalTime,
     billableTime,
     count: entries.length,
-  }
+  };
 }
 
 export default function ProjectsPage() {
-  const projects = fakeProjects
+  const projects = fakeProjects;
 
   return (
     <div className="min-h-screen bg-background">
@@ -100,15 +98,11 @@ export default function ProjectsPage() {
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project) => {
-            const stats = getProjectStats(project.id)
+            const stats = getProjectStats(project.id);
 
             return (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                stats={stats}
-              />
-            )
+              <ProjectCard key={project.id} project={project} stats={stats} />
+            );
           })}
 
           {projects.length === 0 && (
@@ -121,5 +115,5 @@ export default function ProjectsPage() {
         </div>
       </main>
     </div>
-  )
+  );
 }
