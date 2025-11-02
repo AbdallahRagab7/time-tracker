@@ -89,7 +89,6 @@ export function TimerContainer() {
                 <Input
                   id="task"
                   placeholder="What are you working on?"
-                  value={task}
                   disabled={isRunning}
                   className="border-border bg-background text-foreground"
                 />

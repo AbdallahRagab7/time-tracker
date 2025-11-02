@@ -1,7 +1,11 @@
+import { EntriesContainer } from "@/features/entries/components/entries-container"
+
 export default function EntriesPage() {
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold">Entries</h1>
+    <div className="min-h-screen bg-background">
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <EntriesContainer />
+      </main>
     </div>
-  );
+  )
 }
