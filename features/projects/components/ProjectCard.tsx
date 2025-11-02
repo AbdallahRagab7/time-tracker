@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Edit2, Trash2 } from "lucide-react";
-import { Project } from "@/types/project";
+import type { Project } from "@/lib/types";
 
 interface ProjectCardProps {
   project: Project;
@@ -18,9 +18,16 @@ interface ProjectCardProps {
     billableTime: number;
     count: number;
   };
+  onEdit: (project: Project) => void;
+  onDelete: (projectId: string) => void;
 }
 
-export function ProjectCard({ project, stats }: ProjectCardProps) {
+export function ProjectCard({
+  project,
+  stats,
+  onEdit,
+  onDelete,
+}: ProjectCardProps) {
   const hours = Math.floor(stats.totalTime / 3600);
   const minutes = Math.floor((stats.totalTime % 3600) / 60);
 
@@ -34,12 +41,12 @@ export function ProjectCard({ project, stats }: ProjectCardProps) {
               style={{ backgroundColor: project.color }}
             />
             <div>
-              <CardTitle className="text-base">{project.name}</CardTitle>
+              <CardTitle className="text-lg">{project.name}</CardTitle>
               <CardDescription>{project.client || "No client"}</CardDescription>
             </div>
           </div>
           <div
-            className={`text-xs px-2 py-1 rounded capitalize ${
+            className={`text-xs px-2 py-1 rounded ${
               project.status === "active"
                 ? "bg-primary/20 text-primary"
                 : "bg-muted text-muted-foreground"
@@ -52,41 +59,46 @@ export function ProjectCard({ project, stats }: ProjectCardProps) {
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-sm text-muted-foreground">Rate</p>
-            <p className="font-semibold text-foreground">
+            <div className="text-sm text-muted-foreground">Rate</div>
+            <div className="text-lg font-semibold text-foreground">
               {project.currency} {project.hourlyRate}/hr
-            </p>
+            </div>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Total Time</p>
-            <div className="font-semibold text-foreground">
+            <div className="text-sm text-muted-foreground">Total Time</div>
+            <div className="text-lg font-semibold text-foreground">
               {String(hours).padStart(2, "0")}:
               {String(minutes).padStart(2, "0")}
             </div>
           </div>
         </div>
 
-        <p className="text-sm text-muted-foreground">
+        <div className="text-sm text-muted-foreground">
           {stats.count} time entr{stats.count === 1 ? "y" : "ies"}
-        </p>
+        </div>
 
-        <div className="flex items-center gap-2 pt-4 border-t border-border">
+        <div className="flex gap-2 pt-4 border-t border-border">
           <Button
+            onClick={() => onEdit(project)}
             variant="outline"
+            className="flex-1 gap-2"
             size="sm"
-            className="flex-1 flex items-center justify-center gap-2 py-2"
           >
             <Edit2 className="w-4 h-4" />
-            <span className="leading-none">Edit</span>
+            Edit
           </Button>
-
           <Button
+            onClick={() => {
+              if (confirm("Delete this project?")) {
+                onDelete(project.id);
+              }
+            }}
             variant="outline"
+            className="flex-1 gap-2 text-destructive hover:text-destructive"
             size="sm"
-            className="flex-1 py-2 flex items-center justify-center gap-2 text-destructive hover:text-destructive"
           >
             <Trash2 className="w-4 h-4" />
-            <span className="leading-none">Delete</span>
+            Delete
           </Button>
         </div>
       </CardContent>

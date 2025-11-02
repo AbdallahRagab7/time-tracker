@@ -1,10 +1,15 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export function EditEntryModal() {
   // Static form data
@@ -13,14 +18,14 @@ export function EditEntryModal() {
     startTime: "09:00",
     endTime: "11:00",
     billable: true,
-    notes: "Working on the hero section"
-  }
+    notes: "Working on the hero section",
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     // In a real app, you would handle form submission here
-    console.log('Form submitted:', formData)
-  }
+    console.log("Form submitted:", formData);
+  };
 
   return (
     <Dialog open={false} onOpenChange={() => {}}>
@@ -32,11 +37,11 @@ export function EditEntryModal() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="task" className="text-foreground">
+            <label htmlFor="task" className="text-foreground">
               Task <span className="text-destructive">*</span>
-            </Label>
-            <Input 
-              id="task" 
+            </label>
+            <Input
+              id="task"
               value={formData.task}
               className="border-border bg-background"
               disabled
@@ -45,12 +50,12 @@ export function EditEntryModal() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="startTime" className="text-foreground">
+              <label htmlFor="startTime" className="text-foreground">
                 Start Time <span className="text-destructive">*</span>
-              </Label>
-              <Input 
-                id="startTime" 
-                type="time" 
+              </label>
+              <Input
+                id="startTime"
+                type="time"
                 value={formData.startTime}
                 className="border-border bg-background"
                 disabled
@@ -58,12 +63,12 @@ export function EditEntryModal() {
             </div>
 
             <div>
-              <Label htmlFor="endTime" className="text-foreground">
+              <label htmlFor="endTime" className="text-foreground">
                 End Time <span className="text-destructive">*</span>
-              </Label>
-              <Input 
-                id="endTime" 
-                type="time" 
+              </label>
+              <Input
+                id="endTime"
+                type="time"
                 value={formData.endTime}
                 className="border-border bg-background"
                 disabled
@@ -72,9 +77,9 @@ export function EditEntryModal() {
           </div>
 
           <div>
-            <Label htmlFor="notes" className="text-foreground">
+            <label htmlFor="notes" className="text-foreground">
               Notes
-            </Label>
+            </label>
             <Input
               id="notes"
               placeholder="Add any notes..."
@@ -85,14 +90,13 @@ export function EditEntryModal() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Checkbox
-              id="billable"
-              checked={formData.billable}
-              disabled
-            />
-            <Label htmlFor="billable" className="text-foreground cursor-pointer">
+            <Checkbox id="billable" checked={formData.billable} disabled />
+            <label
+              htmlFor="billable"
+              className="text-foreground cursor-pointer"
+            >
               Billable Hours
-            </Label>
+            </label>
           </div>
 
           <div className="flex gap-3 justify-end">
@@ -106,5 +110,5 @@ export function EditEntryModal() {
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
