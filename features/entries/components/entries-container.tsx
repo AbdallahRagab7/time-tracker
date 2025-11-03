@@ -1,53 +1,87 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Plus } from "lucide-react"
-
-// Static data
-const projects = [
-  { id: "proj1", name: "Website Redesign", color: "#3b82f6" },
-  { id: "proj2", name: "Mobile App", color: "#10b981" },
-  { id: "proj3", name: "Marketing", color: "#8b5cf6" }
-]
-
-const entries = [
-  {
-    id: "1",
-    projectId: "proj1",
-    task: "Design homepage",
-    date: new Date().toISOString().split("T")[0],
-    startTime: new Date().toISOString(),
-    endTime: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
-    duration: 7200, // 2 hours
-    billable: true,
-    notes: "Worked on the hero section"
-  },
-  {
-    id: "2",
-    projectId: "proj2",
-    task: "Fix login bug",
-    date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split("T")[0],
-    startTime: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-    endTime: new Date(Date.now() - 22 * 60 * 60 * 1000).toISOString(),
-    duration: 3600, // 1 hour
-    billable: true,
-    notes: "Fixed authentication issue"
-  }
-]
+import { useState, useEffect } from "react";
+import { useProjectStore } from "@/features/projects/store/project-store";
+import { useEntriesStore } from "@/features/entries/store/entries-store";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Plus } from "lucide-react";
+import { ManualEntryModal } from "./manual-entry-modal";
+import { EditEntryModal } from "./edit-entry-modal";
+import { EntryCard } from "./entry-card"; // importing EntryCard component
+import type { TimeEntry } from "@/features/shared/types";
 
 export function EntriesContainer() {
-  const filtered = entries
-  const today = new Date().toISOString().split("T")[0]
-  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]
+  const { projects } = useProjectStore();
+  const { entries, deleteEntry, updateEntry } = useEntriesStore();
+  const [mounted, setMounted] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterProject, setFilterProject] = useState("all");
+  const [sortBy, setSortBy] = useState<"date" | "duration" | "project">("date");
+  const [showManualModal, setShowManualModal] = useState(false);
+  const [editingEntry, setEditingEntry] = useState<TimeEntry | null>(null);
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+
+  useEffect(() => {
+    setMounted(true);
+    const today = new Date().toISOString().split("T")[0];
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0];
+    setDateFrom(sevenDaysAgo);
+    setDateTo(today);
+  }, []);
+
+  let filtered = entries;
+
+  if (dateFrom && dateTo) {
+    filtered = filtered.filter((e) => e.date >= dateFrom && e.date <= dateTo);
+  }
+
+  if (filterProject !== "all") {
+    filtered = filtered.filter((e) => e.projectId === filterProject);
+  }
+
+  if (searchTerm) {
+    filtered = filtered.filter((e) =>
+      e.task.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
+
+  if (sortBy === "duration") {
+    filtered = [...filtered].sort((a, b) => b.duration - a.duration);
+  } else if (sortBy === "project") {
+    filtered = [...filtered].sort((a, b) =>
+      a.projectId.localeCompare(b.projectId)
+    );
+  } else {
+    filtered = [...filtered].sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+  }
+
+  if (!mounted) return null;
 
   return (
     <>
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-foreground">Time Entries</h1>
-        <Button className="gap-2" disabled>
+        <Button onClick={() => setShowManualModal(true)} className="gap-2">
           <Plus className="w-4 h-4" />
           Add Entry
         </Button>
@@ -57,54 +91,67 @@ export function EntriesContainer() {
         <CardContent className="pt-6">
           <div className="grid gap-4 md:grid-cols-5">
             <div>
-              <label className="text-sm text-muted-foreground block mb-2">Search Task</label>
+              <label className="text-sm text-muted-foreground block mb-2">
+                Search Task
+              </label>
               <Input
                 placeholder="Search..."
-                disabled
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="border-border bg-background"
               />
             </div>
 
             <div>
-              <label className="text-sm text-muted-foreground block mb-2">From Date</label>
+              <label className="text-sm text-muted-foreground block mb-2">
+                From Date
+              </label>
               <Input
                 type="date"
-                value={sevenDaysAgo}
-                disabled
+                value={dateFrom}
+                onChange={(e) => setDateFrom(e.target.value)}
                 className="border-border bg-background"
               />
             </div>
 
             <div>
-              <label className="text-sm text-muted-foreground block mb-2">To Date</label>
+              <label className="text-sm text-muted-foreground block mb-2">
+                To Date
+              </label>
               <Input
                 type="date"
-                value={today}
-                disabled
+                value={dateTo}
+                onChange={(e) => setDateTo(e.target.value)}
                 className="border-border bg-background"
               />
             </div>
 
             <div>
-              <label className="text-sm text-muted-foreground block mb-2">Project</label>
-              <Select disabled>
+              <label className="text-sm text-muted-foreground block mb-2">
+                Project
+              </label>
+              <Select value={filterProject} onValueChange={setFilterProject}>
                 <SelectTrigger className="border-border bg-background">
-                  <SelectValue placeholder="All Projects" />
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-background border-border">
                   <SelectItem value="all">All Projects</SelectItem>
-                  <SelectItem value="proj1">Website Redesign</SelectItem>
-                  <SelectItem value="proj2">Mobile App</SelectItem>
-                  <SelectItem value="proj3">Marketing</SelectItem>
+                  {projects.map((p) => (
+                    <SelectItem key={p.id} value={p.id}>
+                      {p.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
 
             <div>
-              <label className="text-sm text-muted-foreground block mb-2">Sort By</label>
-              <Select disabled>
+              <label className="text-sm text-muted-foreground block mb-2">
+                Sort By
+              </label>
+              <Select value={sortBy} onValueChange={(v) => setSortBy(v as any)}>
                 <SelectTrigger className="border-border bg-background">
-                  <SelectValue placeholder="Date" />
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-background border-border">
                   <SelectItem value="date">Date</SelectItem>
@@ -124,13 +171,22 @@ export function EntriesContainer() {
         </CardHeader>
         <CardContent>
           {filtered.length === 0 ? (
-            <p className="text-center text-muted-foreground py-8">No entries found</p>
+            <p className="text-center text-muted-foreground py-8">
+              No entries found
+            </p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border">
-                    {["Project", "Task", "Date", "Duration", "Billable", "Actions"].map((header) => (
+                    {[
+                      "Project",
+                      "Task",
+                      "Date",
+                      "Duration",
+                      "Billable",
+                      "Actions",
+                    ].map((header) => (
                       <th
                         key={header}
                         className={`py-3 px-4 font-semibold text-foreground ${
@@ -143,51 +199,19 @@ export function EntriesContainer() {
                   </tr>
                 </thead>
                 <tbody>
-                  {entries.map((entry) => {
-                    const project = projects.find((p) => p.id === entry.projectId)
-                    const date = new Date(entry.date).toLocaleDateString()
-                    const hours = Math.floor(entry.duration / 3600)
-                    const minutes = Math.floor((entry.duration % 3600) / 60)
-                    
+                  {filtered.map((entry) => {
+                    const project = projects.find(
+                      (p) => p.id === entry.projectId
+                    );
                     return (
-                      <tr key={entry.id} className="border-b border-border hover:bg-background/50">
-                        <td className="py-3 px-4">
-                          <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: project?.color }} />
-                            <span>{project?.name}</span>
-                          </div>
-                        </td>
-                        <td className="py-3 px-4">{entry.task}</td>
-                        <td className="py-3 px-4 text-muted-foreground">{date}</td>
-                        <td className="py-3 px-4 font-mono">
-                          {String(hours).padStart(2, '0')}:{String(minutes).padStart(2, '0')}
-                        </td>
-                        <td className="py-3 px-4">
-                          {entry.billable ? (
-                            <span className="bg-primary/20 text-primary text-xs px-2 py-1 rounded">Yes</span>
-                          ) : (
-                            <span className="text-muted-foreground text-xs">No</span>
-                          )}
-                        </td>
-                        <td className="py-3 px-4 text-right">
-                          <div className="flex justify-end gap-2">
-                            <button className="text-muted-foreground hover:text-primary transition-colors opacity-50 cursor-not-allowed">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                                <path d="m13.5 6.5 4 4" />
-                              </svg>
-                            </button>
-                            <button className="text-muted-foreground hover:text-destructive transition-colors opacity-50 cursor-not-allowed">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M3 6h18" />
-                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                              </svg>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    )
+                      <EntryCard
+                        key={entry.id}
+                        entry={entry}
+                        project={project}
+                        onEdit={setEditingEntry}
+                        onDelete={deleteEntry}
+                      />
+                    );
                   })}
                 </tbody>
               </table>
@@ -196,7 +220,20 @@ export function EntriesContainer() {
         </CardContent>
       </Card>
 
-      {/* Modals removed - static content only */}
+      <ManualEntryModal
+        open={showManualModal}
+        onOpenChange={setShowManualModal}
+      />
+      {editingEntry && (
+        <EditEntryModal
+          entry={editingEntry}
+          onOpenChange={(open) => !open && setEditingEntry(null)}
+          onSave={(updates) => {
+            updateEntry(editingEntry.id, updates);
+            setEditingEntry(null);
+          }}
+        />
+      )}
     </>
-  )
+  );
 }

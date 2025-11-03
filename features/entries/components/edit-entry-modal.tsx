@@ -1,5 +1,8 @@
 "use client";
 
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { editEntrySchema, type EditEntryFormData } from "@/lib/schemas";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -10,42 +13,78 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import type { TimeEntry } from "@/features/shared/types";
 
-export function EditEntryModal() {
-  // Static form data
-  const formData = {
-    task: "Design homepage",
-    startTime: "09:00",
-    endTime: "11:00",
-    billable: true,
-    notes: "Working on the hero section",
-  };
+interface EditEntryModalProps {
+  entry: TimeEntry;
+  onOpenChange: (open: boolean) => void;
+  onSave: (updates: Partial<TimeEntry>) => void;
+}
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // In a real app, you would handle form submission here
-    console.log("Form submitted:", formData);
+export function EditEntryModal({
+  entry,
+  onOpenChange,
+  onSave,
+}: EditEntryModalProps) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<EditEntryFormData>({
+    resolver: zodResolver(editEntrySchema),
+    defaultValues: {
+      task: entry.task,
+      startTime: new Date(entry.startTime)
+        .toLocaleTimeString("en-US", { hour12: false })
+        .slice(0, 5),
+      endTime: new Date(entry.endTime)
+        .toLocaleTimeString("en-US", { hour12: false })
+        .slice(0, 5),
+      billable: entry.billable,
+      notes: entry.notes,
+    },
+  });
+
+  const onSubmit = (data: EditEntryFormData) => {
+    const startDateTime = new Date(`${entry.date}T${data.startTime}`);
+    const endDateTime = new Date(`${entry.date}T${data.endTime}`);
+    const duration = Math.floor(
+      (endDateTime.getTime() - startDateTime.getTime()) / 1000
+    );
+
+    onSave({
+      task: data.task,
+      notes: data.notes,
+      billable: data.billable,
+      startTime: startDateTime.toISOString(),
+      endTime: endDateTime.toISOString(),
+      duration,
+    });
   };
 
   return (
-    <Dialog open={false} onOpenChange={() => {}}>
+    <Dialog open={true} onOpenChange={onOpenChange}>
       <DialogContent className="border-border bg-card">
         <DialogHeader>
           <DialogTitle>Edit Time Entry</DialogTitle>
-          <DialogDescription>Edit your time entry details</DialogDescription>
+          <DialogDescription>Update entry details</DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label htmlFor="task" className="text-foreground">
               Task <span className="text-destructive">*</span>
             </label>
             <Input
               id="task"
-              value={formData.task}
               className="border-border bg-background"
-              disabled
+              {...register("task")}
             />
+            {errors.task && (
+              <p className="text-sm text-destructive mt-1">
+                {errors.task.message}
+              </p>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -56,10 +95,14 @@ export function EditEntryModal() {
               <Input
                 id="startTime"
                 type="time"
-                value={formData.startTime}
                 className="border-border bg-background"
-                disabled
+                {...register("startTime")}
               />
+              {errors.startTime && (
+                <p className="text-sm text-destructive mt-1">
+                  {errors.startTime.message}
+                </p>
+              )}
             </div>
 
             <div>
@@ -69,10 +112,14 @@ export function EditEntryModal() {
               <Input
                 id="endTime"
                 type="time"
-                value={formData.endTime}
                 className="border-border bg-background"
-                disabled
+                {...register("endTime")}
               />
+              {errors.endTime && (
+                <p className="text-sm text-destructive mt-1">
+                  {errors.endTime.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -84,13 +131,18 @@ export function EditEntryModal() {
               id="notes"
               placeholder="Add any notes..."
               className="border-border bg-background"
-              value={formData.notes}
-              disabled
+              {...register("notes")}
             />
           </div>
 
           <div className="flex items-center gap-2">
-            <Checkbox id="billable" checked={formData.billable} disabled />
+            <Checkbox
+              id="billable"
+              {...register("billable")}
+              onCheckedChange={(checked) =>
+                register("billable").onChange({ target: { checked } })
+              }
+            />
             <label
               htmlFor="billable"
               className="text-foreground cursor-pointer"
@@ -100,11 +152,15 @@ export function EditEntryModal() {
           </div>
 
           <div className="flex gap-3 justify-end">
-            <Button onClick={() => {}} variant="outline" disabled>
+            <Button
+              onClick={() => onOpenChange(false)}
+              variant="outline"
+              disabled={isSubmitting}
+            >
               Cancel
             </Button>
-            <Button type="submit" disabled>
-              Save Changes
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Saving..." : "Save Changes"}
             </Button>
           </div>
         </form>

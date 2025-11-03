@@ -131,7 +131,15 @@ export function AddProjectModal({
       });
     }
 
+    reset();
     onClose();
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      reset();
+    }
+    onOpenChange(open);
   };
 
   const {
@@ -145,7 +153,7 @@ export function AddProjectModal({
   const selectedColor = watch("color");
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>

@@ -1,60 +1,101 @@
-"use client"
+"use client";
 
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Card, CardContent } from "@/components/ui/card";
+import { useProjectStore } from "@/features/projects/store/project-store";
 
-// Static data
-const projects = [
-  { id: "proj1", name: "Website Redesign", color: "#3b82f6" },
-  { id: "proj2", name: "Mobile App", color: "#10b981" },
-  { id: "proj3", name: "Marketing", color: "#8b5cf6" }
-]
+interface EntriesFilterProps {
+  searchTerm: string;
+  onSearchChange: (value: string) => void;
+  filterProject: string;
+  onProjectChange: (value: string) => void;
+  sortBy: "date" | "duration" | "project";
+  onSortChange: (value: "date" | "duration" | "project") => void;
+  dateFrom: string;
+  onDateFromChange: (value: string) => void;
+  dateTo: string;
+  onDateToChange: (value: string) => void;
+}
 
-export function EntriesFilter() {
-  // Static values
-  const today = new Date().toISOString().split("T")[0]
-  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]
+export function EntriesFilter({
+  searchTerm,
+  onSearchChange,
+  filterProject,
+  onProjectChange,
+  sortBy,
+  onSortChange,
+  dateFrom,
+  onDateFromChange,
+  dateTo,
+  onDateToChange,
+}: EntriesFilterProps) {
+  const { projects } = useProjectStore();
 
   return (
     <Card className="border-border bg-card mb-6">
       <CardContent className="pt-6">
         <div className="grid gap-4 md:grid-cols-5">
           <div>
-            <label className="text-sm text-muted-foreground block mb-2">Search Task</label>
-            <Input disabled placeholder="Search..." />
+            <label className="text-sm text-muted-foreground block mb-2">
+              Search Task
+            </label>
+            <Input
+              value={searchTerm}
+              onChange={onSearchChange}
+              placeholder="Search..."
+            />
           </div>
 
           <div>
-            <label className="text-sm text-muted-foreground block mb-2">From Date</label>
-            <Input type="date" value={sevenDaysAgo} disabled />
+            <label className="text-sm text-muted-foreground block mb-2">
+              From Date
+            </label>
+            <Input type="date" value={dateFrom} onChange={onDateFromChange} />
           </div>
 
           <div>
-            <label className="text-sm text-muted-foreground block mb-2">To Date</label>
-            <Input type="date" value={today} disabled />
+            <label className="text-sm text-muted-foreground block mb-2">
+              To Date
+            </label>
+            <Input type="date" value={dateTo} onChange={onDateToChange} />
           </div>
 
           <div>
-            <label className="text-sm text-muted-foreground block mb-2">Project</label>
-            <Select disabled>
+            <label className="text-sm text-muted-foreground block mb-2">
+              Project
+            </label>
+            <Select value={filterProject} onValueChange={onProjectChange}>
               <SelectTrigger className="border-border bg-background">
-                <SelectValue placeholder="All Projects" />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-background border-border">
                 <SelectItem value="all">All Projects</SelectItem>
-                <SelectItem value="proj1">Website Redesign</SelectItem>
-                <SelectItem value="proj2">Mobile App</SelectItem>
-                <SelectItem value="proj3">Marketing</SelectItem>
+                {projects.map((p) => (
+                  <SelectItem key={p.id} value={p.id}>
+                    {p.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
 
           <div>
-            <label className="text-sm text-muted-foreground block mb-2">Sort By</label>
-            <Select disabled>
+            <label className="text-sm text-muted-foreground block mb-2">
+              Sort By
+            </label>
+            <Select
+              value={sortBy}
+              onValueChange={(v) => onSortChange(v as any)}
+            >
               <SelectTrigger className="border-border bg-background">
-                <SelectValue placeholder="Date" />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-background border-border">
                 <SelectItem value="date">Date</SelectItem>
@@ -66,5 +107,5 @@ export function EntriesFilter() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

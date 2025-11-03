@@ -78,9 +78,15 @@ export function ProjectsContainer() {
 
       <AddProjectModal
         open={showModal}
-        onOpenChange={setShowModal}
+        onOpenChange={(open) => {
+          setShowModal(open);
+          if (!open) {
+            setEditingProject(null);
+          }
+        }}
         editingProject={editingProject}
         onClose={() => {
+          setShowModal(false);
           setEditingProject(null);
         }}
       />

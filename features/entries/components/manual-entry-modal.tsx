@@ -1,155 +1,252 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEntriesStore } from "@/features/entries/store/entries-store";
+import { useProjectStore } from "@/features/projects/store/project-store";
+import { manualEntrySchema, type ManualEntryFormData } from "@/lib/schemas";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import type { TimeEntry } from "@/features/shared/types";
 
-// Static data
-const projects = [
-  { id: "proj1", name: "Website Redesign", color: "#3b82f6" },
-  { id: "proj2", name: "Mobile App", color: "#10b981" },
-  { id: "proj3", name: "Marketing", color: "#8b5cf6" }
-]
+interface ManualEntryModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
 
-export function ManualEntryModal() {
-  // Static form data
-  const formData = {
-    projectId: "proj1",
-    task: "Design homepage",
-    date: new Date().toISOString().split("T")[0],
-    startTime: "09:00",
-    endTime: "11:00",
-    billable: true,
-    notes: "Working on the hero section"
-  }
+export function ManualEntryModal({
+  open,
+  onOpenChange,
+}: ManualEntryModalProps) {
+  const { projects } = useProjectStore();
+  const { addEntry } = useEntriesStore();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // In a real app, you would handle form submission here
-    console.log('Form submitted:', formData)
-  }
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<ManualEntryFormData>({
+    resolver: zodResolver(manualEntrySchema),
+    defaultValues: {
+      projectId: "",
+      task: "",
+      date: new Date().toISOString().split("T")[0],
+      startTime: "09:00",
+      endTime: "10:00",
+      billable: true,
+      notes: "",
+    },
+  });
+
+  const projectId = watch("projectId");
+
+  const onSubmit = (data: ManualEntryFormData) => {
+    const startDateTime = new Date(`${data.date}T${data.startTime}`);
+    const endDateTime = new Date(`${data.date}T${data.endTime}`);
+    const duration = Math.floor(
+      (endDateTime.getTime() - startDateTime.getTime()) / 1000
+    );
+
+    const entry: TimeEntry = {
+      id: `entry_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      projectId: data.projectId,
+      task: data.task,
+      startTime: startDateTime.toISOString(),
+      endTime: endDateTime.toISOString(),
+      duration,
+      billable: data.billable,
+      tags: [],
+      notes: data.notes,
+      date: data.date,
+      createdAt: new Date().toISOString(),
+    };
+
+    addEntry(entry);
+    reset();
+    onOpenChange(false);
+  };
+
+  const handleOpenChange = (newOpen: boolean) => {
+    if (newOpen) {
+      reset();
+    }
+    onOpenChange(newOpen);
+  };
 
   return (
-    <Dialog open={false} onOpenChange={() => {}}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="border-border bg-card">
         <DialogHeader>
           <DialogTitle>Add Time Entry</DialogTitle>
           <DialogDescription>Manually add a time entry</DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <Label htmlFor="projectId" className="text-foreground">
+            <label htmlFor="projectId" className="text-foreground">
               Project <span className="text-destructive">*</span>
-            </Label>
-            <Select disabled value={formData.projectId}>
-              <SelectTrigger id="projectId" className="border-border bg-background">
-                <SelectValue />
+            </label>
+            <Select
+              value={projectId}
+              onValueChange={(value) => setValue("projectId", value)}
+            >
+              <SelectTrigger
+                id="projectId"
+                className="border-border bg-background"
+              >
+                <SelectValue placeholder="Select project" />
               </SelectTrigger>
               <SelectContent className="bg-background border-border">
                 {projects.map((p) => (
-                  <div key={p.id} className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: p.color }} />
-                    <SelectItem value={p.id}>
+                  <SelectItem key={p.id} value={p.id}>
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: p.color }}
+                      />
                       {p.name}
-                    </SelectItem>
-                  </div>
+                    </div>
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
+            {errors.projectId && (
+              <p className="text-sm text-destructive mt-1">
+                {errors.projectId.message}
+              </p>
+            )}
           </div>
 
           <div>
-            <Label htmlFor="task" className="text-foreground">
+            <label htmlFor="task" className="text-foreground">
               Task <span className="text-destructive">*</span>
-            </Label>
+            </label>
             <Input
               id="task"
-              value={formData.task}
               placeholder="What did you work on?"
               className="border-border bg-background"
-              disabled
+              {...register("task")}
             />
+            {errors.task && (
+              <p className="text-sm text-destructive mt-1">
+                {errors.task.message}
+              </p>
+            )}
           </div>
 
           <div>
-            <Label htmlFor="date" className="text-foreground">
+            <label htmlFor="date" className="text-foreground">
               Date <span className="text-destructive">*</span>
-            </Label>
-            <Input 
-              id="date" 
-              type="date" 
-              value={formData.date}
-              className="border-border bg-background" 
-              disabled
+            </label>
+            <Input
+              id="date"
+              type="date"
+              className="border-border bg-background"
+              {...register("date")}
             />
+            {errors.date && (
+              <p className="text-sm text-destructive mt-1">
+                {errors.date.message}
+              </p>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="startTime" className="text-foreground">
+              <label htmlFor="startTime" className="text-foreground">
                 Start Time <span className="text-destructive">*</span>
-              </Label>
-              <Input 
-                id="startTime" 
-                type="time" 
-                value={formData.startTime}
-                className="border-border bg-background" 
-                disabled
+              </label>
+              <Input
+                id="startTime"
+                type="time"
+                className="border-border bg-background"
+                {...register("startTime")}
               />
+              {errors.startTime && (
+                <p className="text-sm text-destructive mt-1">
+                  {errors.startTime.message}
+                </p>
+              )}
             </div>
 
             <div>
-              <Label htmlFor="endTime" className="text-foreground">
+              <label htmlFor="endTime" className="text-foreground">
                 End Time <span className="text-destructive">*</span>
-              </Label>
-              <Input 
-                id="endTime" 
-                type="time" 
-                value={formData.endTime}
-                className="border-border bg-background" 
-                disabled
+              </label>
+              <Input
+                id="endTime"
+                type="time"
+                className="border-border bg-background"
+                {...register("endTime")}
               />
+              {errors.endTime && (
+                <p className="text-sm text-destructive mt-1">
+                  {errors.endTime.message}
+                </p>
+              )}
             </div>
           </div>
 
           <div>
-            <Label htmlFor="notes" className="text-foreground">
+            <label htmlFor="notes" className="text-foreground">
               Notes
-            </Label>
+            </label>
             <Input
               id="notes"
               placeholder="Add any notes..."
               className="border-border bg-background"
-              value={formData.notes}
-              disabled
+              {...register("notes")}
             />
           </div>
 
           <div className="flex items-center gap-2">
             <Checkbox
               id="billable"
-              checked={formData.billable}
-              disabled
+              {...register("billable")}
+              onCheckedChange={(checked) =>
+                register("billable").onChange({ target: { checked } })
+              }
             />
-            <Label htmlFor="billable" className="text-foreground cursor-pointer">
+            <label
+              htmlFor="billable"
+              className="text-foreground cursor-pointer"
+            >
               Billable Hours
-            </Label>
+            </label>
           </div>
 
           <div className="flex gap-3 justify-end">
-            <Button onClick={() => {}} variant="outline" disabled>
+            <Button
+              onClick={() => onOpenChange(false)}
+              variant="outline"
+              disabled={isSubmitting}
+            >
               Cancel
             </Button>
-            <Button type="submit" disabled>
-              Add Entry
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Adding..." : "Add Entry"}
             </Button>
           </div>
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -22,7 +22,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import { Play, Square, RotateCcw } from "lucide-react";
 import { TodaySummary } from "./today-summary";
 import { RecentEntries } from "./recent-entries";
@@ -78,9 +77,9 @@ export function TimerContainer() {
 
             <div className="space-y-4">
               <div>
-                <Label htmlFor="project" className="text-foreground">
+                <label htmlFor="project" className="text-foreground">
                   Project
-                </Label>
+                </label>
                 <Select
                   value={selectedProject}
                   onValueChange={setSelectedProject}
@@ -109,9 +108,9 @@ export function TimerContainer() {
               </div>
 
               <div>
-                <Label htmlFor="task" className="text-foreground">
+                <label htmlFor="task" className="text-foreground">
                   Task Description
-                </Label>
+                </label>
                 <Input
                   id="task"
                   placeholder="What are you working on?"
@@ -143,12 +142,12 @@ export function TimerContainer() {
                   }}
                   disabled={timerState.isRunning}
                 />
-                <Label
+                <label
                   htmlFor="billable"
                   className="text-foreground cursor-pointer"
                 >
                   Billable Hours
-                </Label>
+                </label>
               </div>
             </div>
 
