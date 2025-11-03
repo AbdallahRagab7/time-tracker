@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useProjectStore } from "@/features/projects/store/project-store";
 import { useEntriesStore } from "@/features/entries/store/entries-store";
 import {
@@ -13,11 +14,22 @@ import { Trash2 } from "lucide-react";
 
 export function RecentEntries() {
   const { projects } = useProjectStore();
-  const { deleteEntry, getEntriesByDate } = useEntriesStore();
+  const { deleteEntry } = useEntriesStore();
+  const entries = useEntriesStore((state) => state.entries);
 
   const today = new Date().toISOString().split("T")[0];
-  const todaysEntries = getEntriesByDate(today);
-  const recentEntries = todaysEntries.slice(0, 7);
+  const todaysEntries = useMemo(() => {
+    return entries
+      .filter((e) => e.date === today)
+      .sort(
+        (a, b) =>
+          new Date(b.startTime).getTime() - new Date(a.startTime).getTime()
+      );
+  }, [entries, today]);
+  const recentEntries = useMemo(
+    () => todaysEntries.slice(0, 7),
+    [todaysEntries]
+  );
 
   const formatTime = (seconds: number) => {
     return `${String(Math.floor(seconds / 3600)).padStart(2, "0")}:${String(
@@ -77,7 +89,7 @@ export function RecentEntries() {
                         )}
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        {startHour} – {endHour} • {formatTime(entry.duration)}
+                        {startHour} – {endHour} • {formatTime(entry.duration)}m
                       </div>
                     </div>
                     <button
