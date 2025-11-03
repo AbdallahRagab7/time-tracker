@@ -1,5 +1,7 @@
 "use client";
 
+import { useProjectStore } from "@/features/projects/store/project-store";
+import { useEntriesStore } from "@/features/entries/store/entries-store";
 import {
   Card,
   CardContent,
@@ -10,42 +12,12 @@ import {
 import { Trash2 } from "lucide-react";
 
 export function RecentEntries() {
-  // Static data for recent entries
-  const recentEntries = [
-    {
-      id: "1",
-      task: "Design Dashboard",
-      projectId: "proj1",
-      startTime: new Date().setHours(9, 0, 0, 0),
-      endTime: new Date().setHours(10, 30, 0, 0),
-      duration: 5400, // 1.5 hours in seconds
-      billable: true,
-    },
-    {
-      id: "2",
-      task: "Team Meeting",
-      projectId: "proj2",
-      startTime: new Date().setHours(11, 0, 0, 0),
-      endTime: new Date().setHours(12, 0, 0, 0),
-      duration: 3600, // 1 hour in seconds
-      billable: false,
-    },
-    {
-      id: "3",
-      task: "Code Review",
-      projectId: "proj1",
-      startTime: new Date().setHours(13, 30, 0, 0),
-      endTime: new Date().setHours(15, 0, 0, 0),
-      duration: 5400, // 1.5 hours in seconds
-      billable: true,
-    },
-  ];
+  const { projects } = useProjectStore();
+  const { deleteEntry, getEntriesByDate } = useEntriesStore();
 
-  // Static projects data
-  const projects = [
-    { id: "proj1", name: "Website Redesign", color: "#3b82f6" },
-    { id: "proj2", name: "Internal", color: "#10b981" },
-  ];
+  const today = new Date().toISOString().split("T")[0];
+  const todaysEntries = getEntriesByDate(today);
+  const recentEntries = todaysEntries.slice(0, 7);
 
   const formatTime = (seconds: number) => {
     return `${String(Math.floor(seconds / 3600)).padStart(2, "0")}:${String(
@@ -104,15 +76,15 @@ export function RecentEntries() {
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-muted-foreground">
+                      <div className="text-sm text-muted-foreground">
                         {startHour} – {endHour} • {formatTime(entry.duration)}
-                      </p>
+                      </div>
                     </div>
                     <button
-                      onClick={() => {}}
+                      onClick={() => deleteEntry(entry.id)}
                       className="ml-2 text-muted-foreground hover:text-destructive transition-colors"
                     >
-                      <Trash2 className="w-4 h-4 cursor-not-allowed opacity-50" />
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 );

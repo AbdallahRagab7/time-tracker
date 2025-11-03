@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { AddProjectModal } from "./add-project-modal";
 import { ProjectCard } from "./ProjectCard";
-import type { Project } from "@/lib/types";
+import type { Project } from "@/features/shared/types";
 
 export function ProjectsContainer() {
   const { projects, deleteProject } = useProjectStore();
@@ -28,7 +28,7 @@ export function ProjectsContainer() {
     const count = Math.floor(Math.random() * 10) + 1; // 1-10 entries
     const totalTime = Math.floor(Math.random() * 10000) + 1000; // 1000-11000 seconds
     const billableTime = Math.floor(totalTime * (0.7 + Math.random() * 0.3)); // 70-100% of total time
-    
+
     return { totalTime, billableTime, count };
   };
 

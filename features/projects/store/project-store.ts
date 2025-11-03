@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { Project } from "@/lib/types";
+import type { Project } from "@/features/shared/types";
 
 interface ProjectStore {
   projects: Project[];

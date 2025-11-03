@@ -1,5 +1,11 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { useTimerStore } from "../store/timer-store";
+import { useProjectStore } from "@/features/projects/store/project-store";
+import { useStatsStore } from "@/features/reports/store/stats-store";
+import { TimerDisplay } from "./timer-display";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -7,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -14,26 +21,46 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-// import { label } from "@/components/ui/label";
-import { TimerDisplay } from "./timer-display";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { Play, Square, RotateCcw } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox"; // assuming you have one
 import { TodaySummary } from "./today-summary";
 import { RecentEntries } from "./recent-entries";
 
 export function TimerContainer() {
-  // --- Fake Data ---
-  const isRunning = false; // toggle true/false to preview both states
-  const selectedProject = "1";
-  const task = "Design landing page";
-  const billable = true;
-  const projects = [
-    { id: "1", name: "Project Alpha", color: "#3b82f6" },
-    { id: "2", name: "Project Beta", color: "#10b981" },
-    { id: "3", name: "Project Gamma", color: "#f59e0b" },
-  ];
+  const {
+    timerState,
+    startTimer,
+    stopTimer,
+    resetTimer,
+    updateTimerTask,
+    updateTimerBillable,
+  } = useTimerStore();
+  const { projects } = useProjectStore();
+  const { getTodaysStats } = useStatsStore();
+
+  const [task, setTask] = useState("");
+  const [selectedProject, setSelectedProject] = useState<string>("");
+  const [billable, setBillable] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const handleStart = () => {
+    if (selectedProject && task.trim()) {
+      startTimer(selectedProject, task, billable);
+    }
+  };
+
+  const handleStop = () => {
+    stopTimer();
+    setTask("");
+    setSelectedProject("");
+  };
+
+  if (!mounted) return null;
 
   return (
     <div className="grid gap-8 lg:grid-cols-3">
@@ -44,21 +71,21 @@ export function TimerContainer() {
             <CardTitle>Time Tracker</CardTitle>
             <CardDescription>Start or stop your timer</CardDescription>
           </CardHeader>
-
           <CardContent className="space-y-8">
-            {/* Timer Display */}
             <div className="flex justify-center">
               <TimerDisplay />
             </div>
 
-            {/* Inputs */}
             <div className="space-y-4">
-              {/* Project Select */}
               <div>
-                <label htmlFor="project" className="text-foreground">
+                <Label htmlFor="project" className="text-foreground">
                   Project
-                </label>
-                <Select value={selectedProject} disabled={isRunning}>
+                </Label>
+                <Select
+                  value={selectedProject}
+                  onValueChange={setSelectedProject}
+                  disabled={timerState.isRunning}
+                >
                   <SelectTrigger
                     id="project"
                     className="border-border bg-background text-foreground"
@@ -81,49 +108,74 @@ export function TimerContainer() {
                 </Select>
               </div>
 
-              {/* Task Input */}
               <div>
-                <label htmlFor="task" className="text-foreground">
+                <Label htmlFor="task" className="text-foreground">
                   Task Description
-                </label>
+                </Label>
                 <Input
                   id="task"
                   placeholder="What are you working on?"
-                  disabled={isRunning}
+                  value={timerState.isRunning ? timerState.currentTask : task}
+                  onChange={(e) => {
+                    if (timerState.isRunning) {
+                      updateTimerTask(e.target.value);
+                    } else {
+                      setTask(e.target.value);
+                    }
+                  }}
+                  disabled={timerState.isRunning}
                   className="border-border bg-background text-foreground"
                 />
               </div>
 
-              {/* Billable Checkbox */}
               <div className="flex items-center gap-2">
                 <Checkbox
                   id="billable"
-                  checked={billable}
-                  disabled={isRunning}
+                  checked={
+                    timerState.isRunning ? timerState.billable : billable
+                  }
+                  onCheckedChange={(checked) => {
+                    if (timerState.isRunning) {
+                      updateTimerBillable(checked as boolean);
+                    } else {
+                      setBillable(checked as boolean);
+                    }
+                  }}
+                  disabled={timerState.isRunning}
                 />
-                <label
+                <Label
                   htmlFor="billable"
                   className="text-foreground cursor-pointer"
                 >
                   Billable Hours
-                </label>
+                </Label>
               </div>
             </div>
 
-            {/* Timer Controls */}
             <div className="flex gap-3 justify-center">
-              {!isRunning ? (
-                <Button className="gap-2" size="lg">
+              {!timerState.isRunning ? (
+                <Button
+                  onClick={handleStart}
+                  disabled={!selectedProject || !task.trim()}
+                  className="gap-2"
+                  size="lg"
+                >
                   <Play className="w-4 h-4" />
                   Start Timer
                 </Button>
               ) : (
                 <>
-                  <Button variant="destructive" className="gap-2" size="lg">
+                  <Button
+                    onClick={handleStop}
+                    variant="destructive"
+                    className="gap-2"
+                    size="lg"
+                  >
                     <Square className="w-4 h-4" />
                     Stop Timer
                   </Button>
                   <Button
+                    onClick={resetTimer}
                     variant="outline"
                     className="gap-2 bg-transparent"
                     size="lg"
@@ -137,6 +189,7 @@ export function TimerContainer() {
           </CardContent>
         </Card>
       </div>
+
       <div className="space-y-4">
         <TodaySummary />
       </div>

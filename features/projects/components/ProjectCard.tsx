@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Edit2, Trash2 } from "lucide-react";
-import type { Project } from "@/lib/types";
+import type { Project } from "@/features/shared/types";
 
 interface ProjectCardProps {
   project: Project;

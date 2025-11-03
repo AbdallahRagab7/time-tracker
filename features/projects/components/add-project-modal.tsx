@@ -21,17 +21,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { Project } from "@/lib/types";
+import type { Project } from "@/features/shared/types";
 
 // Form schema using Zod
 const projectFormSchema = z.object({
   name: z.string().min(1, "Project name is required"),
   client: z.string().min(1, "Client name is required"),
   color: z.string().min(1, "Color is required"),
-  hourlyRate: z.string().min(1, "Hourly rate is required").refine(
-    (val) => !isNaN(Number(val)) && Number(val) >= 0,
-    "Hourly rate must be a number"
-  ),
+  hourlyRate: z
+    .string()
+    .min(1, "Hourly rate is required")
+    .refine(
+      (val) => !isNaN(Number(val)) && Number(val) >= 0,
+      "Hourly rate must be a number"
+    ),
   currency: z.string().min(1, "Currency is required"),
   status: z.enum(["active", "archived"]),
 });
@@ -131,7 +134,14 @@ export function AddProjectModal({
     onClose();
   };
 
-  const { register, handleSubmit, formState: { errors }, reset, setValue, watch } = form;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+    watch,
+  } = form;
   const selectedColor = watch("color");
 
   return (
@@ -159,7 +169,9 @@ export function AddProjectModal({
               {...register("name")}
             />
             {errors.name && (
-              <p className="text-sm text-destructive mt-1">{errors.name.message}</p>
+              <p className="text-sm text-destructive mt-1">
+                {errors.name.message}
+              </p>
             )}
           </div>
 
@@ -173,7 +185,9 @@ export function AddProjectModal({
               {...register("client")}
             />
             {errors.client && (
-              <p className="text-sm text-destructive mt-1">{errors.client.message}</p>
+              <p className="text-sm text-destructive mt-1">
+                {errors.client.message}
+              </p>
             )}
           </div>
 
@@ -190,7 +204,9 @@ export function AddProjectModal({
                 {...register("hourlyRate")}
               />
               {errors.hourlyRate && (
-                <p className="text-sm text-destructive mt-1">{errors.hourlyRate.message}</p>
+                <p className="text-sm text-destructive mt-1">
+                  {errors.hourlyRate.message}
+                </p>
               )}
             </div>
 
@@ -214,7 +230,9 @@ export function AddProjectModal({
                 </SelectContent>
               </Select>
               {errors.currency && (
-                <p className="text-sm text-destructive mt-1">{errors.currency.message}</p>
+                <p className="text-sm text-destructive mt-1">
+                  {errors.currency.message}
+                </p>
               )}
             </div>
           </div>
@@ -225,7 +243,9 @@ export function AddProjectModal({
             </label>
             <Select
               value={watch("status")}
-              onValueChange={(value) => setValue("status", value as "active" | "archived")}
+              onValueChange={(value) =>
+                setValue("status", value as "active" | "archived")
+              }
             >
               <SelectTrigger className="mt-1 border-border bg-background">
                 <SelectValue placeholder="Select status" />
@@ -236,7 +256,9 @@ export function AddProjectModal({
               </SelectContent>
             </Select>
             {errors.status && (
-              <p className="text-sm text-destructive mt-1">{errors.status.message}</p>
+              <p className="text-sm text-destructive mt-1">
+                {errors.status.message}
+              </p>
             )}
           </div>
 
@@ -250,7 +272,9 @@ export function AddProjectModal({
                   key={colorItem.value}
                   type="button"
                   className={`h-8 w-8 rounded-full transition-transform hover:scale-110 ${
-                    selectedColor === colorItem.value ? "ring-2 ring-offset-2 ring-primary" : ""
+                    selectedColor === colorItem.value
+                      ? "ring-2 ring-offset-2 ring-primary"
+                      : ""
                   }`}
                   style={{ backgroundColor: colorItem.value }}
                   onClick={() => setValue("color", colorItem.value)}
@@ -260,7 +284,9 @@ export function AddProjectModal({
             </div>
             <input type="hidden" {...register("color")} />
             {errors.color && (
-              <p className="text-sm text-destructive mt-1">{errors.color.message}</p>
+              <p className="text-sm text-destructive mt-1">
+                {errors.color.message}
+              </p>
             )}
           </div>
 
