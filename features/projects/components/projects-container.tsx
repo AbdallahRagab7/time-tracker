@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useProjectStore } from "../store/project-store";
+import { useEntriesStore } from "@/features/entries/store/entries-store";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { AddProjectModal } from "./add-project-modal";
@@ -10,6 +11,7 @@ import type { Project } from "@/features/shared/types";
 
 export function ProjectsContainer() {
   const { projects, deleteProject } = useProjectStore();
+  const { entries } = useEntriesStore();
   const [mounted, setMounted] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
@@ -24,12 +26,12 @@ export function ProjectsContainer() {
   };
 
   const getProjectStats = (projectId: string) => {
-    // Generate fake data
-    const count = Math.floor(Math.random() * 10) + 1; // 1-10 entries
-    const totalTime = Math.floor(Math.random() * 10000) + 1000; // 1000-11000 seconds
-    const billableTime = Math.floor(totalTime * (0.7 + Math.random() * 0.3)); // 70-100% of total time
-
-    return { totalTime, billableTime, count };
+    const projectEntries = entries.filter((e) => e.projectId === projectId);
+    const totalTime = projectEntries.reduce((sum, e) => sum + e.duration, 0);
+    const billableTime = projectEntries
+      .filter((e) => e.billable)
+      .reduce((sum, e) => sum + e.duration, 0);
+    return { totalTime, billableTime, count: projectEntries.length };
   };
 
   if (!mounted) return null;

@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Edit2, Trash2 } from "lucide-react";
 import type { Project } from "@/features/shared/types";
+import { useEntriesStore } from "@/features/entries/store/entries-store";
 
 interface ProjectGridProps {
   projects: Project[];
@@ -18,11 +19,23 @@ interface ProjectGridProps {
 }
 
 export function ProjectGrid({ projects, onEdit, onDelete }: ProjectGridProps) {
+  const { entries } = useEntriesStore();
+
+  const getProjectStats = (projectId: string) => {
+    const projectEntries = entries.filter((e) => e.projectId === projectId);
+    const totalTime = projectEntries.reduce((sum, e) => sum + e.duration, 0);
+    const billableTime = projectEntries
+      .filter((e) => e.billable)
+      .reduce((sum, e) => sum + e.duration, 0);
+    return { totalTime, billableTime, count: projectEntries.length };
+  };
+
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {projects.map((project) => {
-        const hours = Math.floor(9000 / 3600);
-        const minutes = Math.floor((9000 % 3600) / 60);
+        const stats = getProjectStats(project.id);
+        const hours = Math.floor(stats.totalTime / 3600);
+        const minutes = Math.floor((stats.totalTime % 3600) / 60);
 
         return (
           <Card
@@ -73,7 +86,9 @@ export function ProjectGrid({ projects, onEdit, onDelete }: ProjectGridProps) {
                 </div>
               </div>
 
-              <div className="text-sm text-muted-foreground">time entries</div>
+              <div className="text-sm text-muted-foreground">
+                {stats.count} time entr{stats.count === 1 ? "y" : "ies"}
+              </div>
 
               <div className="flex gap-2 pt-4 border-t border-border">
                 <Button
