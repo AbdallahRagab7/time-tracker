@@ -106,7 +106,9 @@ export function ManualEntryModal({
             </label>
             <Select
               value={projectId}
-              onValueChange={(value) => setValue("projectId", value)}
+              onValueChange={(value) =>
+                setValue("projectId", value, { shouldValidate: true })
+              }
             >
               <SelectTrigger
                 id="projectId"
