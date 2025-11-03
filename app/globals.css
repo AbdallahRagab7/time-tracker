@@ -57,7 +57,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* @media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
@@ -67,7 +67,7 @@
     --muted-foreground: #9ca3af;
     --primary: #60a5fa;
   }
-} */
+}
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -162,7 +162,7 @@ input[type="number"] {
 }
 
 label {
-  @apply font-semibold text-sm inline-block mb-1.5;
+  @apply font-semibold text-sm inline-block mb-1;
 }
 .error {
   @apply text-xs text-destructive mt-0.5;

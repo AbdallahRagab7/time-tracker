@@ -50,8 +50,6 @@ const COLORS = [
   { value: "#F7DC6F", label: "Yellow" },
   { value: "#BB8FCE", label: "Lavender" },
   { value: "#A2D9CE", label: "Seafoam" },
-  { value: "#F5B7B1", label: "Peach" },
-  { value: "#D2B4DE", label: "Lilac" },
 ];
 
 interface AddProjectModalProps {
@@ -166,9 +164,9 @@ export function AddProjectModal({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
           <div>
-            <label className="text-sm font-medium text-foreground">
+            <label>
               Project Name <span className="text-destructive">*</span>
             </label>
             <Input
@@ -180,7 +178,7 @@ export function AddProjectModal({
           </div>
 
           <div>
-            <label className="text-sm font-medium text-foreground">
+            <label>
               Client <span className="text-destructive">*</span>
             </label>
             <Input
@@ -193,7 +191,7 @@ export function AddProjectModal({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium text-foreground">
+              <label>
                 Hourly Rate <span className="text-destructive">*</span>
               </label>
               <Input
@@ -209,7 +207,7 @@ export function AddProjectModal({
             </div>
 
             <div>
-              <label className="text-sm font-medium text-foreground">
+              <label>
                 Currency <span className="text-destructive">*</span>
               </label>
               <Select
@@ -234,7 +232,7 @@ export function AddProjectModal({
           </div>
 
           <div>
-            <label className="text-sm font-medium text-foreground">
+            <label>
               Status <span className="text-destructive">*</span>
             </label>
             <Select
@@ -255,15 +253,13 @@ export function AddProjectModal({
           </div>
 
           <div>
-            <label className="text-sm font-medium text-foreground">
-              Color <span className="text-destructive">*</span>
-            </label>
+            <label>Color</label>
             <div className="mt-2 flex flex-wrap gap-2">
               {COLORS.map((colorItem) => (
                 <button
                   key={colorItem.value}
                   type="button"
-                  className={`h-8 w-8 rounded-full transition-transform hover:scale-110 ${
+                  className={`h-7 w-7 rounded-full transition-transform hover:scale-110 ${
                     selectedColor === colorItem.value
                       ? "ring-2 ring-offset-2 ring-primary"
                       : ""

@@ -46,9 +46,9 @@ export function ProjectCard({
             </div>
           </div>
           <div
-            className={`text-xs px-2 py-1 rounded ${
+            className={`text-xs px-2 py-1 capitalize rounded ${
               project.status === "active"
-                ? "bg-primary/20 text-primary"
+                ? "bg-green-600 text-white"
                 : "bg-muted text-muted-foreground"
             }`}
           >
@@ -59,29 +59,29 @@ export function ProjectCard({
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <div className="text-sm text-muted-foreground">Rate</div>
-            <div className="text-lg font-semibold text-foreground">
+            <p className="text-sm text-muted-foreground">Rate</p>
+            <p className=" font-semibold text-foreground">
               {project.currency} {project.hourlyRate}/hr
-            </div>
+            </p>
           </div>
           <div>
-            <div className="text-sm text-muted-foreground">Total Time</div>
-            <div className="text-lg font-semibold text-foreground">
+            <p className="text-sm text-muted-foreground">Total Time</p>
+            <p className="text-lg font-semibold text-foreground">
               {String(hours).padStart(2, "0")}:
-              {String(minutes).padStart(2, "0")}
-            </div>
+              {String(minutes).padStart(2, "0")}m
+            </p>
           </div>
         </div>
 
-        <div className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           {stats.count} time entr{stats.count === 1 ? "y" : "ies"}
-        </div>
+        </p>
 
         <div className="flex gap-2 pt-4 border-t border-border">
           <Button
             onClick={() => onEdit(project)}
             variant="outline"
-            className="flex-1 gap-2"
+            className="flex-1 flex items-center justify-center gap-2 py-2"
             size="sm"
           >
             <Edit2 className="w-4 h-4" />
@@ -94,7 +94,7 @@ export function ProjectCard({
               }
             }}
             variant="outline"
-            className="flex-1 gap-2 text-destructive hover:text-destructive"
+            className="flex-1 py-2 flex items-center justify-center gap-2 text-destructive hover:text-destructive"
             size="sm"
           >
             <Trash2 className="w-4 h-4" />

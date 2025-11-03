@@ -47,24 +47,24 @@ export function TodaySummary() {
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <div className="text-sm text-muted-foreground">Total Time</div>
-          <div className="text-3xl font-bold text-primary">
+          <p className="text-3xl font-bold text-primary">
             {formatTime(stats.totalTime)}
             <span className="texs-sm">m</span>
-          </div>
+          </p>
         </div>
 
         <div className="space-y-2">
-          <div className="text-sm text-muted-foreground">Billable</div>
-          <div className="text-2xl font-bold text-foreground">
+          <p className="text-sm text-muted-foreground">Billable</p>
+          <p className="text-2xl font-bold text-foreground">
             {formatTime(stats.billableTime)}m
-          </div>
+          </p>
         </div>
 
         <div className="space-y-2">
-          <div className="text-sm text-muted-foreground">Entries</div>
-          <div className="text-2xl font-bold text-foreground">
+          <p className="text-sm text-muted-foreground">Entries</p>
+          <p className="text-2xl font-bold text-foreground">
             {stats.entryCount}
-          </div>
+          </p>
         </div>
 
         {Object.keys(stats.byProject).length > 0 && (
