@@ -164,3 +164,6 @@ input[type="number"] {
 label {
   @apply font-semibold text-sm inline-block mb-1.5;
 }
+.error {
+  @apply text-xs text-destructive mt-0.5;
+}

@@ -80,11 +80,7 @@ export function EditEntryModal({
               className="border-border bg-background"
               {...register("task")}
             />
-            {errors.task && (
-              <p className="text-sm text-destructive mt-1">
-                {errors.task.message}
-              </p>
-            )}
+            {errors.task && <p className="error">{errors.task.message}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -99,9 +95,7 @@ export function EditEntryModal({
                 {...register("startTime")}
               />
               {errors.startTime && (
-                <p className="text-sm text-destructive mt-1">
-                  {errors.startTime.message}
-                </p>
+                <p className="error">{errors.startTime.message}</p>
               )}
             </div>
 
@@ -116,9 +110,7 @@ export function EditEntryModal({
                 {...register("endTime")}
               />
               {errors.endTime && (
-                <p className="text-sm text-destructive mt-1">
-                  {errors.endTime.message}
-                </p>
+                <p className="error">{errors.endTime.message}</p>
               )}
             </div>
           </div>

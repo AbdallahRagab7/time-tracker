@@ -156,7 +156,7 @@ export function TimerContainer() {
                 <Button
                   onClick={handleStart}
                   disabled={!selectedProject || !task.trim()}
-                  className="gap-2"
+                  className="flex items-center gap-2"
                   size="lg"
                 >
                   <Play className="w-4 h-4" />
@@ -166,8 +166,7 @@ export function TimerContainer() {
                 <>
                   <Button
                     onClick={handleStop}
-                    variant="destructive"
-                    className="gap-2"
+                    className="flex items-center gap-2"
                     size="lg"
                   >
                     <Square className="w-4 h-4" />
@@ -176,7 +175,7 @@ export function TimerContainer() {
                   <Button
                     onClick={resetTimer}
                     variant="outline"
-                    className="gap-2 bg-transparent"
+                    className="flex items-center gap-2 bg-transparent"
                     size="lg"
                   >
                     <RotateCcw className="w-4 h-4" />

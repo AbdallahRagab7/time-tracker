@@ -99,7 +99,7 @@ export function ManualEntryModal({
           <DialogDescription>Manually add a time entry</DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
           <div>
             <label htmlFor="projectId" className="text-foreground">
               Project <span className="text-destructive">*</span>
@@ -129,9 +129,7 @@ export function ManualEntryModal({
               </SelectContent>
             </Select>
             {errors.projectId && (
-              <p className="text-sm text-destructive mt-1">
-                {errors.projectId.message}
-              </p>
+              <p className="error">{errors.projectId.message}</p>
             )}
           </div>
 
@@ -145,11 +143,7 @@ export function ManualEntryModal({
               className="border-border bg-background"
               {...register("task")}
             />
-            {errors.task && (
-              <p className="text-sm text-destructive mt-1">
-                {errors.task.message}
-              </p>
-            )}
+            {errors.task && <p className="error">{errors.task.message}</p>}
           </div>
 
           <div>
@@ -162,11 +156,7 @@ export function ManualEntryModal({
               className="border-border bg-background"
               {...register("date")}
             />
-            {errors.date && (
-              <p className="text-sm text-destructive mt-1">
-                {errors.date.message}
-              </p>
-            )}
+            {errors.date && <p className="error">{errors.date.message}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -181,9 +171,7 @@ export function ManualEntryModal({
                 {...register("startTime")}
               />
               {errors.startTime && (
-                <p className="text-sm text-destructive mt-1">
-                  {errors.startTime.message}
-                </p>
+                <p className="error">{errors.startTime.message}</p>
               )}
             </div>
 
@@ -198,9 +186,7 @@ export function ManualEntryModal({
                 {...register("endTime")}
               />
               {errors.endTime && (
-                <p className="text-sm text-destructive mt-1">
-                  {errors.endTime.message}
-                </p>
+                <p className="error">{errors.endTime.message}</p>
               )}
             </div>
           </div>

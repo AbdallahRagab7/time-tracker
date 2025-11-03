@@ -176,11 +176,7 @@ export function AddProjectModal({
               className="mt-1 border-border bg-background"
               {...register("name")}
             />
-            {errors.name && (
-              <p className="text-sm text-destructive mt-1">
-                {errors.name.message}
-              </p>
-            )}
+            {errors.name && <p className="error">{errors.name.message}</p>}
           </div>
 
           <div>
@@ -192,11 +188,7 @@ export function AddProjectModal({
               className="mt-1 border-border bg-background"
               {...register("client")}
             />
-            {errors.client && (
-              <p className="text-sm text-destructive mt-1">
-                {errors.client.message}
-              </p>
-            )}
+            {errors.client && <p className="error">{errors.client.message}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -212,9 +204,7 @@ export function AddProjectModal({
                 {...register("hourlyRate")}
               />
               {errors.hourlyRate && (
-                <p className="text-sm text-destructive mt-1">
-                  {errors.hourlyRate.message}
-                </p>
+                <p className="error">{errors.hourlyRate.message}</p>
               )}
             </div>
 
@@ -238,9 +228,7 @@ export function AddProjectModal({
                 </SelectContent>
               </Select>
               {errors.currency && (
-                <p className="text-sm text-destructive mt-1">
-                  {errors.currency.message}
-                </p>
+                <p className="error">{errors.currency.message}</p>
               )}
             </div>
           </div>
@@ -263,11 +251,7 @@ export function AddProjectModal({
                 <SelectItem value="archived">Archived</SelectItem>
               </SelectContent>
             </Select>
-            {errors.status && (
-              <p className="text-sm text-destructive mt-1">
-                {errors.status.message}
-              </p>
-            )}
+            {errors.status && <p className="error">{errors.status.message}</p>}
           </div>
 
           <div>
@@ -291,11 +275,7 @@ export function AddProjectModal({
               ))}
             </div>
             <input type="hidden" {...register("color")} />
-            {errors.color && (
-              <p className="text-sm text-destructive mt-1">
-                {errors.color.message}
-              </p>
-            )}
+            {errors.color && <p className="error">{errors.color.message}</p>}
           </div>
 
           <div className="flex justify-end gap-2 pt-4">

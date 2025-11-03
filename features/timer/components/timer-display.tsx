@@ -2,6 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useTimerStore } from "@/features/timer/store/timer-store";
+import { Roboto_Mono } from "next/font/google";
+
+const robotoMono = Roboto_Mono({
+  subsets: ["latin"],
+  weight: "700", // Using bold weight for better visibility
+  display: "swap",
+});
 
 export function TimerDisplay() {
   const timerState = useTimerStore((state) => state.timerState);
@@ -36,7 +43,9 @@ export function TimerDisplay() {
   return (
     <div className="flex flex-col items-center gap-2">
       <div
-        className={`text-7xl font-mono font-bold ${
+        className={`${
+          robotoMono.className
+        } text-6xl font-bold tracking-tighter ${
           timerState.isRunning ? "text-primary" : "text-foreground"
         }`}
       >
