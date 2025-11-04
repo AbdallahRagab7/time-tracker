@@ -38,8 +38,8 @@ export const editEntrySchema = z
       .min(3, "Task must be at least 3 characters"),
     startTime: z.string().min(1, "Start time is required"),
     endTime: z.string().min(1, "End time is required"),
-    billable: z.boolean().default(true),
-    notes: z.string().optional().default(""),
+    billable: z.boolean(),
+    notes: z.preprocess((val) => val ?? "", z.string()),
   })
   .refine(
     (data) => {

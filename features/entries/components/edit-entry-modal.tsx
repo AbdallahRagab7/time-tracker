@@ -31,7 +31,7 @@ export function EditEntryModal({
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<EditEntryFormData>({
-    resolver: zodResolver(editEntrySchema),
+    resolver: zodResolver(editEntrySchema) as any,
     defaultValues: {
       task: entry.task,
       startTime: new Date(entry.startTime)
@@ -40,8 +40,8 @@ export function EditEntryModal({
       endTime: new Date(entry.endTime)
         .toLocaleTimeString("en-US", { hour12: false })
         .slice(0, 5),
-      billable: entry.billable,
-      notes: entry.notes,
+      billable: entry.billable ?? true,
+      notes: entry.notes ?? "",
     },
   });
 
