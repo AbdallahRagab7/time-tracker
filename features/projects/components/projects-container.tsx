@@ -39,7 +39,7 @@ export function ProjectsContainer() {
   return (
     <>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-foreground">Projects</h1>
+        <h1 className="text-3xl font-semibold text-foreground">Projects</h1>
         <Button
           onClick={() => {
             setEditingProject(null);

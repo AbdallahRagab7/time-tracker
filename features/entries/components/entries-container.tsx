@@ -80,7 +80,7 @@ export function EntriesContainer() {
   return (
     <>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-foreground">Time Entries</h1>
+        <h1 className="text-3xl font-semibold text-foreground">Time Entries</h1>
         <Button
           onClick={() => setShowManualModal(true)}
           className="flex items-center gap-2"
