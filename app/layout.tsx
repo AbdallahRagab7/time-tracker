@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import { Navigation } from "@/components/Navigation";
+import { Navigation } from "@/features/shared/navigation";
+import { DataSeeder } from "@/components/DataSeeder";
 
 const poppins = Poppins({
-  weight: ['300', '400', '500', '600', '700'],
-  style: ['normal', 'italic'],
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal", "italic"],
   subsets: ["latin"],
-  display: 'swap',
-  variable: '--font-poppins',
+  display: "swap",
+  variable: "--font-poppins",
 });
 
 export const metadata: Metadata = {
@@ -22,9 +23,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${poppins.className} antialiased`}
-      >
+      <body className={`${poppins.className} antialiased`}>
+        <DataSeeder />
         <Navigation />
         {children}
       </body>
