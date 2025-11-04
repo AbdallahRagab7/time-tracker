@@ -44,7 +44,7 @@ export function ManualEntryModal({
     formState: { errors, isSubmitting },
     reset,
   } = useForm<ManualEntryFormData>({
-    resolver: zodResolver(manualEntrySchema),
+    resolver: zodResolver(manualEntrySchema) as any,
     defaultValues: {
       projectId: "",
       task: "",
