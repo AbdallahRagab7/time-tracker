@@ -1,16 +1,10 @@
 import type { NextConfig } from "next";
-import path from "path";
 
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
-  webpack: (config) => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      "@": path.resolve(__dirname),
-    };
-    return config;
-  },
+  // Turbopack automatically reads path aliases from tsconfig.json/jsconfig.json
+  turbopack: {},
 };
 
 export default nextConfig;
