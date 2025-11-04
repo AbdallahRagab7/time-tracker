@@ -47,7 +47,7 @@ export function TodaySummary() {
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <div className="text-sm text-muted-foreground">Total Time</div>
-          <p className="text-3xl font-semibold text-primary">
+          <p className="text-3xl font-semibold text-primary opacity-80">
             {formatTime(stats.totalTime)}
             <span className="texs-sm">m</span>
           </p>
@@ -55,14 +55,14 @@ export function TodaySummary() {
 
         <div className="space-y-2">
           <p className="text-sm text-muted-foreground">Billable</p>
-          <p className="text-2xl font-semibold text-foreground">
+          <p className="text-2xl font-semibold text-foreground opacity-80">
             {formatTime(stats.billableTime)}m
           </p>
         </div>
 
         <div className="space-y-2">
           <p className="text-sm text-muted-foreground">Entries</p>
-          <p className="text-2xl font-semibold text-foreground">
+          <p className="text-2xl font-semibold text-foreground opacity-80">
             {stats.entryCount}
           </p>
         </div>

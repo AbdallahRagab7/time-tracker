@@ -155,7 +155,7 @@ export function ManualEntryModal({
             <Input
               id="date"
               type="date"
-              className="border-border bg-background"
+              className="border-border bg-background block"
               {...register("date")}
             />
             {errors.date && <p className="error">{errors.date.message}</p>}
@@ -169,7 +169,7 @@ export function ManualEntryModal({
               <Input
                 id="startTime"
                 type="time"
-                className="border-border bg-background"
+                className="border-border bg-background block"
                 {...register("startTime")}
               />
               {errors.startTime && (
@@ -184,7 +184,7 @@ export function ManualEntryModal({
               <Input
                 id="endTime"
                 type="time"
-                className="border-border bg-background"
+                className="border-border bg-background block"
                 {...register("endTime")}
               />
               {errors.endTime && (

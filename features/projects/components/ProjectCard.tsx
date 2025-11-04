@@ -60,13 +60,13 @@ export function ProjectCard({
         <div className="grid grid-cols-2 gap-4">
           <div>
             <p className="text-sm text-muted-foreground">Rate</p>
-            <p className=" font-semibold text-foreground">
+            <p className=" font-semibold text-foreground opacity-90">
               {project.currency} {project.hourlyRate}/hr
             </p>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Total Time</p>
-            <p className="text-lg font-semibold text-foreground">
+            <p className="text-lg font-semibold text-foreground opacity-90">
               {String(hours).padStart(2, "0")}:
               {String(minutes).padStart(2, "0")}m
             </p>

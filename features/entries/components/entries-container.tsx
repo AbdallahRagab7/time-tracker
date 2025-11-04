@@ -113,7 +113,7 @@ export function EntriesContainer() {
                 type="date"
                 value={dateFrom}
                 onChange={(e) => setDateFrom(e.target.value)}
-                className="border-border bg-background"
+                className="border-border bg-background block"
               />
             </div>
 
@@ -125,7 +125,7 @@ export function EntriesContainer() {
                 type="date"
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
-                className="border-border bg-background"
+                className="border-border bg-background block"
               />
             </div>
 

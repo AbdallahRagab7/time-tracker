@@ -164,7 +164,7 @@ export function AddProjectModal({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-1.5">
           <div>
             <label>
               Project Name <span className="text-destructive">*</span>
@@ -259,10 +259,11 @@ export function AddProjectModal({
                 <button
                   key={colorItem.value}
                   type="button"
-                  className={`h-7 w-7 rounded-full transition-transform hover:scale-110 ${selectedColor === colorItem.value
-                    ? "ring-2 ring-offset-2 ring-primary"
-                    : ""
-                    }`}
+                  className={`h-7 w-7 rounded-full transition-transform hover:scale-110 ${
+                    selectedColor === colorItem.value
+                      ? "ring-2 ring-offset-2 ring-primary"
+                      : ""
+                  }`}
                   style={{ backgroundColor: colorItem.value }}
                   onClick={() => setValue("color", colorItem.value)}
                   aria-label={`Select color ${colorItem.label}`}

@@ -91,7 +91,7 @@ export function EditEntryModal({
               <Input
                 id="startTime"
                 type="time"
-                className="border-border bg-background"
+                className="border-border bg-background block"
                 {...register("startTime")}
               />
               {errors.startTime && (
@@ -106,7 +106,7 @@ export function EditEntryModal({
               <Input
                 id="endTime"
                 type="time"
-                className="border-border bg-background"
+                className="border-border bg-background block"
                 {...register("endTime")}
               />
               {errors.endTime && (
