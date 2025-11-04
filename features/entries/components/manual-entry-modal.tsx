@@ -48,7 +48,7 @@ export function ManualEntryModal({
     defaultValues: {
       projectId: "",
       task: "",
-      date: new Date().toISOString().split("T")[0],
+      date: new Date().toISOString().split("T")[0] as string,
       startTime: "09:00",
       endTime: "10:00",
       billable: true,

@@ -12,7 +12,7 @@ export const manualEntrySchema = z
     startTime: z.string().min(1, "Start time is required"),
     endTime: z.string().min(1, "End time is required"),
     billable: z.boolean().default(true),
-    notes: z.string().optional().default(""),
+    notes: z.string().default(""),
   })
   .refine(
     (data) => {
