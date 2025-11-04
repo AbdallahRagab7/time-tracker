@@ -48,7 +48,7 @@ export function EntriesFilter({
             </label>
             <Input
               value={searchTerm}
-              onChange={onSearchChange}
+              onChange={(e) => onSearchChange(e.target.value)}
               placeholder="Search..."
             />
           </div>
@@ -57,14 +57,14 @@ export function EntriesFilter({
             <label className="text-sm text-muted-foreground block mb-2">
               From Date
             </label>
-            <Input type="date" value={dateFrom} onChange={onDateFromChange} />
+            <Input type="date" value={dateFrom} onChange={(e) => onDateFromChange(e.target.value)} />
           </div>
 
           <div>
             <label className="text-sm text-muted-foreground block mb-2">
               To Date
             </label>
-            <Input type="date" value={dateTo} onChange={onDateToChange} />
+            <Input type="date" value={dateTo} onChange={(e) => onDateToChange(e.target.value)} />
           </div>
 
           <div>
