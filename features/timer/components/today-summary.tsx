@@ -69,27 +69,29 @@ export function TodaySummary() {
 
         {Object.keys(stats.byProject).length > 0 && (
           <div className="space-y-3 border-t border-border pt-4">
-            <div className="text-sm font-semibold text-foreground">
+            <h3 className="text-sm font-semibold text-foreground">
               By Project
-            </div>
+            </h3>
             {Object.entries(stats.byProject).map(([projectId, duration]) => {
               const project = projects.find((p) => p.id === projectId);
+              if (!project) return null;
+
               return (
                 <div
                   key={projectId}
-                  className="flex justify-between items-center text-sm"
+                  className="flex items-center justify-between text-sm"
                 >
                   <div className="flex items-center gap-2">
-                    <div
-                      className="w-2 h-2 rounded-full"
-                      style={{ backgroundColor: project?.color }}
+                    <span
+                      className="h-2 w-2 rounded-full"
+                      style={{ backgroundColor: project.color }}
                     />
                     <span className="text-muted-foreground">
-                      {project?.name}
+                      {project.name}
                     </span>
                   </div>
                   <span className="font-medium text-foreground">
-                    {formatTime(duration)}
+                    {formatTime(duration)}m
                   </span>
                 </div>
               );

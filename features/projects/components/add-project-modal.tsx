@@ -259,11 +259,10 @@ export function AddProjectModal({
                 <button
                   key={colorItem.value}
                   type="button"
-                  className={`h-7 w-7 rounded-full transition-transform hover:scale-110 ${
-                    selectedColor === colorItem.value
-                      ? "ring-2 ring-offset-2 ring-primary"
-                      : ""
-                  }`}
+                  className={`h-7 w-7 rounded-full transition-transform hover:scale-110 ${selectedColor === colorItem.value
+                    ? "ring-2 ring-offset-2 ring-primary"
+                    : ""
+                    }`}
                   style={{ backgroundColor: colorItem.value }}
                   onClick={() => setValue("color", colorItem.value)}
                   aria-label={`Select color ${colorItem.label}`}
@@ -278,6 +277,7 @@ export function AddProjectModal({
             <Button
               type="button"
               variant="outline"
+              className="!px-7"
               onClick={() => {
                 onClose();
                 reset();

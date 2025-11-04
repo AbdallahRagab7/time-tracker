@@ -43,11 +43,9 @@ export function TimerDisplay() {
   return (
     <div className="flex flex-col items-center gap-2">
       <div
-        className={`${
-          robotoMono.className
-        } text-6xl font-bold tracking-tighter ${
-          timerState.isRunning ? "text-primary" : "text-foreground"
-        }`}
+        className={`${robotoMono.className
+          } text-5xl md:text-6xl font-bold tracking-tighter ${timerState.isRunning ? "text-primary" : "text-foreground"
+          }`}
       >
         {formatted}
       </div>
