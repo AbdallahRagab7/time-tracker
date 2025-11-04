@@ -11,8 +11,8 @@ export const manualEntrySchema = z
     date: z.string().min(1, "Date is required"),
     startTime: z.string().min(1, "Start time is required"),
     endTime: z.string().min(1, "End time is required"),
-    billable: z.boolean().default(true),
-    notes: z.string().default(""),
+    billable: z.boolean().default(true).transform(val => val ?? true),
+    notes: z.string().default("").transform(val => val ?? ""),
   })
   .refine(
     (data) => {
