@@ -65,6 +65,40 @@ A modern, full-featured time tracking application built with Next.js 16, React 1
 - Node.js 18+ or npm/yarn package manager
 - Git (optional, for version control)
 
+## Project Structure
+
+```
+time-tracker/
+├── app/
+│   ├── layout.tsx                    # Root layout
+│   ├── page.tsx                      # Home page with feature overview
+│   ├── timer/                        # Timer page
+│   ├── entries/                      # Entries management page
+│   ├── projects/                     # Projects management page
+│   ├── reports/                      # Reports and analytics page
+│   └── globals.css                   # Global styles and design tokens
+├── features/
+│   ├── timer/                        # Timer feature (store + components)
+│   ├── entries/                      # Entries feature (store + components)
+│   ├── projects/                     # Projects feature (store + components)
+│   ├── reports/                      # Reports feature (store + analytics)
+│   └── shared/                       # Shared types and navigation
+├── components/
+│   └── ui/                           # shadcn/ui components
+├── lib/
+│   └── utils.ts                      # Utility functions
+└── public/                           # Static assets
+```
+
+### State Management with Zustand
+
+The app uses **Zustand stores** with localStorage persistence:
+
+- **timerStore** - Manages active timer state and time tracking
+- **entriesStore** - Stores all time entries and provides filtering
+- **projectStore** - Manages project configurations and settings
+- **statsStore** - Calculates analytics and report data on-demand
+
 ### Installation
 
 2. **Install Dependencies**
@@ -104,39 +138,3 @@ npm run start
 \`\`\`
 
 This creates an optimized production build and starts the server.
-
-## Project Structure
-
-\`\`\`
-time-tracker/
-├── app/
-│ ├── layout.tsx # Root layout
-│ ├── page.tsx # Home page with feature overview
-│ ├── timer/ # Timer page
-│ ├── entries/ # Entries management page
-│ ├── projects/ # Projects management page
-│ ├── reports/ # Reports and analytics page
-│ └── globals.css # Global styles and design tokens
-├── features/
-│ ├── timer/ # Timer feature (store + components)
-│ ├── entries/ # Entries feature (store + components)
-│ ├── projects/ # Projects feature (store + components)
-│ ├── reports/ # Reports feature (store + analytics)
-│ └── shared/ # Shared types and navigation
-├── components/
-│ └── ui/ # shadcn/ui components
-├── lib/
-│ └── utils.ts # Utility functions
-└── public/ # Static assets
-\`\`\`
-
-### State Management with Zustand
-
-The app uses **Zustand stores** with localStorage persistence:
-
-- **timerStore** - Manages active timer state and time tracking
-- **entriesStore** - Stores all time entries and provides filtering
-- **projectStore** - Manages project configurations and settings
-- **statsStore** - Calculates analytics and report data on-demand
-
-**Note**: Data is local to your browser. Clearing browser storage will delete all data.
